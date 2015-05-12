@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project DomoRpiDaemon with Jar-in-Jar Loader">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="/Volumes/raspserver/i2c/test.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="it.domopi.daemon.InitDaemon"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./ pi4j-core-1.0.jar"/>
+            </manifest>
+            <zipfileset src="jar-in-jar-loader.zip"/>
+            <fileset dir="/Users/albertofanini/Documents/workspace/DomoRpiDaemon/target/classes"/>
+            <zipfileset dir="/Users/albertofanini/.m2/repository/com/pi4j/pi4j-core/1.0" includes="pi4j-core-1.0.jar"/>
+        </jar>
+    </target>
+</project>
