@@ -6,7 +6,7 @@
 *.exe
 *.o
 *.so
-/ardupi/raspberrypi/bin/
+raspberrypi/bin/
  
 # Packages #
 ############

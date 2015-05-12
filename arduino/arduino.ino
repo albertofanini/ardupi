@@ -68,7 +68,7 @@ struct sensor {
     
     // if buzzer
     int beep_num;
-    int beep_type; // 0: intermittente normale, 1: intermittente veloce, 2: intermittente lungo
+    int beep_type; // 0: normal, 1: fast, 2: slow
     
     // if rfid
     MFRC522* mfrc522;
@@ -348,14 +348,7 @@ void rfid_loop(int index) {
     }
 }
 
-//#define SETUP_MSG              '*'
-//#define GET_MSG                '<'
-//#define SET_MSG                '>'
-//#define SUPER_SEPARATOR        '|'
-//#define SEPARATOR              ';'
-//#define START_MSG              '@'
-//#define END_MSG                '!'
-void receive_data(int byteCount) { // handler di ricezione messaggi su i2c
+void receive_data(int byteCount) {
     
     int numOfBytes = Wire.available();
     for(int i=0; i < numOfBytes && i < BUFFER_SIZE_IN - 1; i++) {
@@ -502,7 +495,7 @@ void sensor_put(int sensor_id, int* params) {
 }
 
 
-void send_data() { // handler di invio messaggi su i2c
+void send_data() {
     
     if (i2c_index == 0) {
         if (strlen(in_msg) > 0) {
@@ -537,24 +530,6 @@ void send_data() { // handler di invio messaggi su i2c
     if (i2c_index >= strlen(curr_msg)) {
          i2c_index = 0;
     }
-    
-    /*
-    Wire.write(curr_msg[i2c_index]);
-    ++i2c_index;
-    if (i2c_index >= strlen(curr_msg)) {
-         i2c_index = 0;
-         char end_msg[2] = {END_CHSUM,0};
-         char super_separator[2] = {SUPER_SEPARATOR,0};
-         
-         strncpy(curr_msg, out_msg, BUFFER_SIZE);
-         
-         char integer_string[32];
-         integer_string[0] = 0;
-         snprintf(integer_string, 32, "%d", get_checksum(curr_msg));
-         strncat(curr_msg, integer_string, BUFFER_SIZE - strlen(curr_msg) - 1);
-         strncat(curr_msg, end_msg, BUFFER_SIZE - strlen(curr_msg) - 1);
-    }*/
-    
 }
 
 void prepare_data() {
