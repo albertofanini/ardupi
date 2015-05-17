@@ -18,12 +18,13 @@ import java.util.Map.Entry;
 
 import com.pi4j.io.i2c.I2CDevice;
 
-public class DomoNode {
+public class Node {
 	
 	private I2CDevice device;
-	private DomoBus bus;
+	private Bus bus;
 	private int deviceAddr;
 	private boolean lastSetupFailed;
+	private int failures;
 	
 	private HashMap<Integer, Sensor> sensors;
 	
@@ -36,7 +37,7 @@ public class DomoNode {
 	public static final char END_CHSUM = '^';
 	
 	
-	public DomoNode(int deviceAddr){
+	public Node(int deviceAddr){
 		this.deviceAddr = deviceAddr;
 		sensors = new HashMap<Integer, Sensor>();
 		lastSetupFailed = false;
@@ -72,8 +73,8 @@ public class DomoNode {
 					public void onSetValueListener() {
 						writeMessageAndCheck(getSetMessage(new String[] {
 								"" + id,
-								"" + ((Buzzer)DomoNode.this.getSensors().get(id)).getBuzzNum(),
-								"" + ((Buzzer)DomoNode.this.getSensors().get(id)).getBuzzType()})
+								"" + ((Buzzer)Node.this.getSensors().get(id)).getBuzzNum(),
+								"" + ((Buzzer)Node.this.getSensors().get(id)).getBuzzType()})
 								);
 					}
 				});
@@ -86,10 +87,13 @@ public class DomoNode {
 				s.addSetValueListener(new SetValueListener() {
 					@Override
 					public void onSetValueListener() {
+						if (!
 						writeMessageAndCheck(getSetMessage(new String[] {
 								"" + id,
-								"" + ((Relay)DomoNode.this.getSensors().get(id)).getStatus()})
-								);
+								"" + ((Relay)Node.this.getSensors().get(id)).getStatus()})
+								)) {
+							System.out.println("errore");
+						}
 					}
 				});
 				break;
@@ -146,11 +150,8 @@ public class DomoNode {
 			setupMsg += END_MSG;
 			setupMsg += "" + getChecksum(setupMsg) + END_CHSUM;
 			
-			System.out.println(setupMsg);
-			
 			if (!writeMessageAndCheck(setupMsg))
 				return false;
-			else System.out.println("setup ok");
 			
 			Utils.sleep(10);
 		}
@@ -178,7 +179,6 @@ public class DomoNode {
 		if (message.startsWith("@nosetup!") || lastSetupFailed) {
 			lastSetupFailed = !setupSensors();
 			if (lastSetupFailed) {
-				System.out.println("failed");
 				return;
 			}
 		}
@@ -212,11 +212,16 @@ public class DomoNode {
 	}
 	
 	private boolean writeMessageAndCheck(String message) {
-		if (!writeMessage(message))
-			return false;
-		else {
-			return readMessage().equals(message);
-		}
+		boolean result = false;
+		int tries = 5;
+		
+		do {
+			tries--;
+			writeMessage(message);
+			result = readMessage().equals(message);
+		} while (!result && tries >= 0);
+		
+		return result;
 	}
 	
 	private boolean writeMessage(String message) {
@@ -262,7 +267,11 @@ public class DomoNode {
 						
 						break;
 					}
+					failures = 0;
 				} catch (Exception e) {
+					failures++;
+					if (failures > 5)
+						Utils.sleep(1000);
 					System.out.println("I/O Error");
 				}
 			}
@@ -311,11 +320,11 @@ public class DomoNode {
 		return device;
 	}
 
-	public DomoBus getBus() {
+	public Bus getBus() {
 		return bus;
 	}
 
-	public void setBus(DomoBus bus) {
+	public void setBus(Bus bus) {
 		this.bus = bus;
 	}
 }

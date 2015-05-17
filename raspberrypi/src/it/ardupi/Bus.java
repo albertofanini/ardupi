@@ -11,16 +11,20 @@ import com.pi4j.io.i2c.I2CFactory;
 
 import it.ardupi.utils.Utils;
 
-public class DomoBus {
-	private HashMap<Integer, DomoNode> nodes;
+public class Bus {
+	private HashMap<Integer, Node> nodes;
 	private I2CBus bus;
 	private int address;
 	private Thread loopThread;
 	private boolean loopRunning;
+
+	public static final int BUS_1 = 1;
+	public static final int BUS_0 = 0;
 	
-	public DomoBus(int address) {
+	
+	public Bus(int address) {
 		this.address = address;
-		nodes = new HashMap<Integer, DomoNode>();
+		nodes = new HashMap<Integer, Node>();
 		loopRunning= false;
 	}
 	
@@ -33,7 +37,7 @@ public class DomoBus {
 		}
 	}
 	
-	public void addNode(DomoNode node){
+	public void addNode(Node node){
 		node.setBus(this);
 		nodes.put(node.getDeviceAddr(), node);
 	}
@@ -46,7 +50,7 @@ public class DomoBus {
 		return address;
 	}
 
-	public HashMap<Integer, DomoNode> getNodes() {
+	public HashMap<Integer, Node> getNodes() {
 		return nodes;
 	}
 	
@@ -66,10 +70,10 @@ public class DomoBus {
 					if (!loopRunning)
 						return;
 					
-					Iterator<Entry<Integer, DomoNode>> it = nodes.entrySet().iterator();
+					Iterator<Entry<Integer, Node>> it = nodes.entrySet().iterator();
 					
 					while (it.hasNext()) {
-						Map.Entry<Integer, DomoNode> pair = (Map.Entry<Integer, DomoNode>)it.next();
+						Map.Entry<Integer, Node> pair = (Map.Entry<Integer, Node>)it.next();
 						
 						pair.getValue().loop();
 						Utils.sleep(10);
@@ -97,7 +101,4 @@ public class DomoBus {
 	public void stopCommunication() {
 		this.loopRunning = false;
 	}
-	
-	
-
 }

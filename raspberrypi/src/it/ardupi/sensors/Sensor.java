@@ -3,8 +3,8 @@ package it.ardupi.sensors;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.ardupi.DomoBus;
-import it.ardupi.DomoNode;
+import it.ardupi.Bus;
+import it.ardupi.Node;
 
 public abstract class Sensor {
 
@@ -22,8 +22,8 @@ public abstract class Sensor {
 	private int id;
 	private int type;
 	private int[] pins;
-	private DomoNode node;
-	private DomoBus bus;
+	private Node node;
+	private Bus bus;
 	
 	public int getId() {
 		return id;
@@ -43,16 +43,16 @@ public abstract class Sensor {
 	public void setPins(int[] pins) {
 		this.pins = pins;
 	}
-	public DomoNode getNode() {
+	public Node getNode() {
 		return node;
 	}
-	public void setNode(DomoNode node) {
+	public void setNode(Node node) {
 		this.node = node;
 	}
-	public DomoBus getBus() {
+	public Bus getBus() {
 		return bus;
 	}
-	public void setBus(DomoBus bus) {
+	public void setBus(Bus bus) {
 		this.bus = bus;
 	}
 
