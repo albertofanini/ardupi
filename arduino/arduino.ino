@@ -13,7 +13,7 @@
 #define D5        5
 #define D6        6
 #define D7        7
-#define D8        8
+#define D8        8 
 #define D9        9
 #define D10       10
 #define D11       11
@@ -354,8 +354,7 @@ void receive_data(int byteCount) {
     for(int i=0; i < numOfBytes && i < BUFFER_SIZE_IN - 1; i++) {
         in_msg[i] = Wire.read();
     }
-    in_msg[min(numOfBytes, BUFFER_SIZE_IN)] = 0;
-    
+    in_msg[min(numOfBytes, BUFFER_SIZE_IN - 1)] = 0;
     parse_data();
     
 }

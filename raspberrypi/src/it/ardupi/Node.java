@@ -224,10 +224,12 @@ public class Node {
 		return result;
 	}
 	
-	private boolean writeMessage(String message) {
+	public boolean writeMessage(String message) {
+		if (message.getBytes().length > 32)
+			return false;
+		
+		Utils.sleep(10);
 		synchronized(this) {
-			Utils.sleep(10);
-			
 			try {
 				device.write(message.getBytes(), 0, message.getBytes().length);
 				Utils.sleep(10);
