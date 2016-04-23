@@ -272,9 +272,11 @@ public class Node {
 					failures = 0;
 				} catch (Exception e) {
 					failures++;
-					if (failures > 5)
-						Utils.sleep(1000);
-					System.out.println("I/O Error");
+					if (failures > 5) {
+						System.err.println("I/O Error on device addr " + this.deviceAddr);
+						Utils.sleep(50);
+						break;
+					}
 				}
 			}
 			return message;
