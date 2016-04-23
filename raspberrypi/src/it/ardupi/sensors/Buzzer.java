@@ -6,8 +6,8 @@ public class Buzzer extends Sensor {
 	public static final int NORMAL = 0;
 	public static final int FAST = 1;
 	
-	private int buzz_num = 0;
-	private int buzz_type = 0;
+	private int buzzNum = 0;
+	private int buzzType = 0;
 
 	@Override
 	public void incomingValues(String[] values) {}
@@ -17,8 +17,8 @@ public class Buzzer extends Sensor {
 		
 		if (values.length == 2) {
 			try {
-				buzz_num = Integer.parseInt(values[0]);
-				buzz_type = Integer.parseInt(values[1]);
+				buzzNum = Integer.parseInt(values[0]);
+				buzzType = Integer.parseInt(values[1]);
 				
 				notifySetValueListeners();
 			} catch (Exception e) {}
@@ -26,19 +26,19 @@ public class Buzzer extends Sensor {
 	}
 
 	public int getBuzzNum() {
-		return buzz_num;
+		return buzzNum;
 	}
 
 	public int getBuzzType() {
-		return buzz_type;
+		return buzzType;
 	}
 
-	public void setBuzzNum(int buzz_num) {
-		this.buzz_num = buzz_num;
+	public void setBuzzNum(int buzzNum) {
+		this.buzzNum = buzzNum;
 	}
 
-	public void setBuzzType(int buzz_type) {
-		this.buzz_type = buzz_type;
+	public void setBuzzType(int buzzType) {
+		this.buzzType = buzzType;
 	}
 	
 	
